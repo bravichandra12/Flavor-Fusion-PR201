@@ -7,3 +7,6 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+
+# Exclude Lib folder (dependencies/virtual env)
+Lib/
