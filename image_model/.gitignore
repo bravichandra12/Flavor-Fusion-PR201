@@ -1,0 +1,12 @@
+# Exclude dataset files
+dataset.pt
+
+# Exclude Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Exclude Lib folder (dependencies/virtual env)
+Lib/
