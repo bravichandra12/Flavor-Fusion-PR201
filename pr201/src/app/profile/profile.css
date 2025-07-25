@@ -1,0 +1,77 @@
+.profile-layout {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px; /* Adjust width as needed */
+    background-color: #1a1a1a;
+    color: white;
+  }
+  
+  .profile-content {
+    flex-grow: 1; /* Take up remaining space */
+    padding: 2rem;
+    background-color: #2a2a2a;
+    color: white;
+    overflow-y: auto;
+  }
+  
+  .profile-container {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .profile-handle {
+    color: gray;
+  }
+  
+  .profile-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .profile-stat {
+    text-align: center;
+  }
+  
+  .profile-stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .profile-stat-label {
+    font-size: 0.9rem;
+    color: gray;
+  }
+  
+  .profile-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .profile-cta-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ff4500;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  

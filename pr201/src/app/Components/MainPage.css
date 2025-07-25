@@ -1,0 +1,112 @@
+/* General styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-weight: bold; /* Apply bold to all text */
+  }
+  
+  .main-container {
+    display: flex;
+    height: 100vh;
+    background-color: #000;
+    color: white;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    width: 200px;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto; /* Make only the sidebar scrollable */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #444 #1a1a1a;
+    border-right: 1px solid grey;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  
+  .app-title {
+    margin-left: 15px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  
+  .sidebar-nav {
+    flex-grow: 1;
+  }
+  
+  .nav-item {
+    display: block;
+    width: 100%;
+    padding: 8px 15px;
+    text-align: left;
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .nav-item:hover {
+    background-color: #333;
+  }
+  
+  .nav-item.active {
+    background-color: #444;
+  }
+  
+  /* Footer and promo box */
+  .sidebar-footer h2 {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #999;
+  }
+  
+  .promo-box {
+    padding: 10px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid white
+  }
+  
+  .promo-box p {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .promo-button {
+    font-weight: bold;
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin-top: 40px;
+  }
+  
+  .promo-button:hover {
+    background-color: #218838;
+  }
+  
+  /* Main content area */
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: #111;
+    overflow-y: auto;
+  }
+  
