@@ -1,10 +1,21 @@
 "use client"
 import React, { useState } from "react";
-import "./MainPage.css"; // Import the CSS file
+import { useRouter } from "next/navigation";
+import "./MainPage.css";
 import ProfilePage from "../profile/page";
+import MealPlanner from "./MealPlanner";
+import dynamic from 'next/dynamic';
+
+// Import the MyRecipes component from the existing page
+import MyRecipes from "../my-recipes/page";
 
 const MainPage = () => {
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState("Recipes");
+
+  const handleNavClick = (item: string) => {
+    setActiveSection(item);
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -13,7 +24,7 @@ const MainPage = () => {
       case "Shopping list":
         return <div></div>;
       case "Meal planner":
-        return <div></div>;
+        return <div><MealPlanner /></div>;
       case "Cookbooks":
         return <div></div>;
       case "Tags":
@@ -21,7 +32,7 @@ const MainPage = () => {
       case "Profile":
         return <div><ProfilePage/></div>;
       case "Add recipe":
-        return <div></div>;
+        return <MyRecipes />;
       case "Discover":
         return <div></div>;
       case "Search users":
@@ -67,7 +78,7 @@ const MainPage = () => {
           {["Discover", "Search users", "Onboarding"].map((item) => (
             <button
               key={item}
-              onClick={() => setActiveSection(item)}
+              onClick={() => handleNavClick(item)}
               className={`nav-item ${
                 activeSection === item ? "active" : ""
               }`}

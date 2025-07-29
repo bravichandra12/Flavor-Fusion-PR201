@@ -76,3 +76,39 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+-- Create the Recipe table
+CREATE TABLE IF NOT EXISTS "Recipe" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "ingredients" TEXT NOT NULL,
+    "instructions" TEXT NOT NULL,
+    "prepTime" INTEGER DEFAULT 0,
+    "cookTime" INTEGER DEFAULT 0,
+    "servings" INTEGER DEFAULT 1,
+    "difficulty" TEXT DEFAULT 'Medium',
+    "imageUrl" TEXT,
+    "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
+);
+
+-- Create an index for faster lookups by userId
+CREATE INDEX IF NOT EXISTS "Recipe_userId_idx" ON "Recipe"("userId");
+
+-- If you need a User table (for future authentication)
+CREATE TABLE IF NOT EXISTS "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "email" TEXT NOT NULL,
+    "name" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
+);
+
+-- Create a unique constraint on email
+CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
+
+-- Add foreign key constraint if needed (uncomment if you have a User table)
+-- ALTER TABLE "Recipe" ADD CONSTRAINT "Recipe_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

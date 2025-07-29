@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import "./HomePage.css"; // Import CSS for styling
 import logo from "../Assets/Logo.png";
 import google from "../Assets/google-logo.png"; // Adjust the path if needed
@@ -14,6 +15,8 @@ import IdentityServer4 from "next-auth/providers/identity-server4";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image"; // Import Image from next/image
 import Link from "next/link";
+import Recipes from "./Recipes"; // Import from project2
+import RecipeDetails from "./RecipeDetails"; // Import from project2
 
 const icons = [
   "🍅", "🥕", "🥦", "🌶️", "🌽", "🍇", "🍓", "🍍", "🍏","🍌", "🍐",
@@ -21,12 +24,15 @@ const icons = [
 ];
 
 const HomePage = () => {
+  const router = useRouter();
   const goToTopRef = useRef(null);
+  const [recipeInput, setRecipeInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Enable smooth scrolling
+      behavior: "smooth",
     });
   };
 
@@ -39,7 +45,7 @@ const HomePage = () => {
     const intervalId = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * icons.length);
       setCurrentIcon(icons[randomIndex]);
-    }, 2000); // Change icon every 2 seconds
+    }, 2000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -60,82 +66,21 @@ const HomePage = () => {
     }));
   };
 
-  const [recipeInput, setRecipeInput] = useState('');
-  const [generatedRecipe, setGeneratedRecipe] = useState('');
-  const [showRecipePage, setShowRecipePage] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const GROQ_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY;
-  const GROQ_MODEL = "llama3-70b-8192";
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRecipeInput(event.target.value);
-  };
-
   const handleGenerateClick = async () => {
     if (!recipeInput.trim()) {
       alert('Please enter a recipe idea!');
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
-      const generatedRecipeText = await callGroqApi(recipeInput);
-      setGeneratedRecipe(generatedRecipeText);
-      setShowRecipePage(true);
+      router.push(`/recipes?name=${encodeURIComponent(recipeInput)}`);
     } catch (error) {
-      console.error('Error generating recipe:', error);
-      setGeneratedRecipe('Error generating recipe. Please try again.');
-      setShowRecipePage(true);
+      console.error('Error:', error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
-
-  const callGroqApi = async (prompt: string): Promise<string> => {
-    prompt=`Give me three distinct Indian recipe names for ${prompt} with detailed ingredients and detailed instructions with proper timings and number of servings, without any starting or ending texts,end every recipe with ||  and with good styling with a line and more spacing between each recipe and some big font.`
-    const url = "https://api.groq.com/openai/v1/chat/completions";
-    const headers = {
-      "Authorization": `Bearer ${GROQ_API_KEY}`,
-      "Content-Type": "application/json",
-    };
-    const data = {
-      "model": GROQ_MODEL,
-      "messages": [
-        { "role": "system", "content": "You are a professional chef. Provide exactly three different Indian recipes with detailed ingredients and instructions with proper timings and mention total timings and number of servings, ensuring variety in ingredients and cooking styles, without any starting or ending texts." },
-        { "role": "user", "content": prompt },
-      ],
-      "temperature": 0.7,
-      "max_tokens": 2000,
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Groq API error: ${response.status} - ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
-      return responseData.choices[0].message.content;
-    } catch (error) {
-      console.error("Groq API call failed:", error);
-      throw error; // Re-throw to handle in handleGenerateClick
-    }
-  };
-
-  if (showRecipePage) {
-    return (
-      <div className="recipe-page">
-        <h2>Generated Recipe</h2>
-        <pre>{generatedRecipe}</pre>
-        <button onClick={() => setShowRecipePage(false)}>Back</button>
-      </div>
-    );
-  }
   
   return (
     <div className="home-page">
@@ -235,15 +180,19 @@ const HomePage = () => {
         <div className="home-page">
       <div className="input-section">
           <input
-            type="text"
-            placeholder="Enter recipe idea or ingredients..."
-            className="recipe-input"
-            value={recipeInput}
-            onChange={handleInputChange}
-          />
-          <button className="generate-button" onClick={handleGenerateClick} disabled={loading}>
-            {loading ? "Generating..." : <b>Generate</b>}
-          </button>
+        type="text"
+        placeholder="Enter recipe idea or ingredients..."
+        className="recipe-input"
+        value={recipeInput}
+        onChange={(e) => setRecipeInput(e.target.value)}
+      />
+      <button 
+        className="generate-button" 
+        onClick={handleGenerateClick} 
+        disabled={loading}
+      >
+        {loading ? "Generating..." : <b>Generate</b>}
+      </button>
         </div>
       </div>
 
