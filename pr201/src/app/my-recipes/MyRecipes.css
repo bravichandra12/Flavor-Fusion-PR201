@@ -1,0 +1,144 @@
+.my-recipes-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  font-weight: bold;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header h1 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+.back-to-home {
+  padding: 0.75rem 1.5rem;
+  background-color: #22c55e;
+  color: #000000;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.back-to-home:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.recipe-card {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #333333;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-card h3 {
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.description {
+  color: #d1d5db;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+  font-weight: bold;
+}
+
+.recipe-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #333333;
+}
+
+.date {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.view-recipe-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.view-recipe-button:hover {
+  background-color: #2563eb;
+}
+
+.loading,
+.no-recipes,
+.error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-top: 2rem;
+  font-weight: bold;
+}
+
+.find-recipes-button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #22c55e;
+  color: #000000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.find-recipes-button:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+}
