@@ -13,9 +13,11 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning={true} className="!scroll-smooth" lang="en">
       <head />
-      <body>
+      <body className="min-h-screen bg-black">
           <SessionProvider>
+            <div className="min-h-screen bg-black">
               {children}
+            </div>
           </SessionProvider>
       </body>
     </html>

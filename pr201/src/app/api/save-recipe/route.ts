@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/auth"; // your NextAuth options
 
 // Initialize Prisma Client
 const prisma = new PrismaClient();
@@ -15,10 +17,20 @@ interface RecipeData {
   servings?: number;
   difficulty?: string;
   imageUrl?: string;
-  userId: string; // Making userId required since it's required in the schema
 }
 
 export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user?.email) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
   try {
     const recipeData: RecipeData = await request.json();
     const { 
@@ -30,17 +42,8 @@ export async function POST(request: Request) {
       cookTime, 
       servings, 
       difficulty, 
-      imageUrl,
-      userId 
+      imageUrl, 
     } = recipeData;
-
-    // Validate required fields
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      );
-    }
 
     // Save to database
     const recipe = await prisma.recipe.create({
@@ -54,7 +57,7 @@ export async function POST(request: Request) {
         servings: servings || 1,
         difficulty: difficulty || 'Medium',
         imageUrl: imageUrl || '',
-        userId, // Using the userId from the request
+        userId: user.id, // Using the userId from the request
       },
       include: {
         user: {

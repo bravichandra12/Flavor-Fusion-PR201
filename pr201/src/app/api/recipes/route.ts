@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const groqApiKey = process.env.GROQ_API_KEY;
-    const prompt = `Generate three unique Indian recipes for: ${recipeName}. Return each recipe with detailed ingredients and steps. End each recipe with ||`;
+    const prompt = `Generate three unique Indian recipes for: ${recipeName}. Return each recipe with detailed ingredients and steps including no of servings and preparation time at the last without any extra text like Here are three recipes etc. . End each recipe with ||`;
 
     const groqResponse = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',

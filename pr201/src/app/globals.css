@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Set global background to black */
+body {
+  background-color: #000000;
+  min-height: 100vh;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
