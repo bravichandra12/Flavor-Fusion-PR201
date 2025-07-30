@@ -1,46 +1,50 @@
 // components/RecipeDetails.tsx
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import './RecipeDetails.css';
 
-const RecipeDetails = () => {
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  ingredients: string[];
+  instructions: string[];
+  prepTime: number;
+  cookTime: number;
+  servings: number;
+  difficulty: string;
+  imageUrl?: string;
+  createdAt?: string;
+}
+
+interface RecipeDetailsProps {
+  recipe: Recipe | null;
+  loading?: boolean;
+  error?: string;
+}
+
+const RecipeDetails: React.FC<RecipeDetailsProps> = ({ recipe, loading = false, error = '' }) => {
   const router = useRouter();
-  const [recipe, setRecipe] = useState('Loading...');
   const [isHovered, setIsHovered] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [error, setError] = useState('');
+  const [saveError, setSaveError] = useState('');
   const { data: session } = useSession();
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedRecipe = localStorage.getItem('selectedRecipe');
-      if (storedRecipe) {
-        setRecipe(storedRecipe);
-      } else {
-        setRecipe('No recipe found.');
-      }
-    }
-  }, []);
-
   const handleBack = () => {
-    router.back();
+    router.push('/my-recipes');
   };
 
   const handleSaveRecipe = async () => {
     if (isSaving || isSaved) return;
     
     setIsSaving(true);
-    setError('');
+    setSaveError('');
     
     try {
-      // Parse the recipe text to extract title, ingredients, etc.
-      const lines = recipe.split('\n').filter(line => line.trim() !== '');
-      const title = lines[0] || 'Untitled Recipe';
-      
       if (!session?.user?.id) {
         throw new Error('You must be logged in to save recipes');
       }
@@ -52,14 +56,15 @@ const RecipeDetails = () => {
         },
         body: JSON.stringify({
           title,
-          description: 'Delicious recipe created with Flavor Fusion',
-          ingredients: lines.filter(line => line.includes('-')), // Simple heuristic for ingredients
-          instructions: lines,
-          prepTime: 15, // Default values, can be extracted from recipe if available
-          cookTime: 30,
-          servings: 4,
-          difficulty: 'Medium',
-          userId: session.user.id, // Add the user ID from the session
+          description,
+          ingredients: JSON.stringify(ingredients),
+          instructions: JSON.stringify(instructions),
+          prepTime,
+          cookTime,
+          servings,
+          difficulty,
+          imageUrl: imageUrl || '',
+          userId: session.user.id,
         }),
       });
 
@@ -70,24 +75,115 @@ const RecipeDetails = () => {
       setIsSaved(true);
     } catch (err) {
       console.error('Error saving recipe:', err);
-      setError('Failed to save recipe. Please try again.');
+      setSaveError('Failed to save recipe. Please try again.');
     } finally {
       setIsSaving(false);
     }
   };
 
+  // Handle loading state
+  if (loading) {
+    return (
+      <div className="recipe-details-container">
+        <div className="loading">Loading recipe details...</div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="recipe-details-container">
+        <div className="error-message">{error}</div>
+        <button 
+          onClick={handleBack}
+          className="back-button"
+        >
+          ← Back to Recipes
+        </button>
+      </div>
+    );
+  }
+
+  // Handle case when recipe is not found or not loaded yet
+  if (!recipe) {
+    return (
+      <div className="recipe-details-container">
+        <div className="error-message">Recipe not found or failed to load</div>
+        <button 
+          onClick={handleBack}
+          className="back-button"
+        >
+          ← Back to Recipes
+        </button>
+      </div>
+    );
+  }
+
+  // Destructure with defaults
+  const { 
+    title = 'Untitled Recipe',
+    description = 'No description available',
+    ingredients = [],
+    instructions = [],
+    prepTime = 0,
+    cookTime = 0,
+    servings = 0,
+    difficulty = 'Not specified',
+    imageUrl = ''
+  } = recipe;
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <div className="recipe-details-container">
+        <div className="loading">Loading recipe details...</div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="recipe-details-container">
+        <div className="error-message">{error}</div>
+        <button 
+          onClick={handleBack}
+          className="back-button"
+        >
+          ← Back to Recipes
+        </button>
+      </div>
+    );
+  }
+
+  // Handle case when recipe is not found or not loaded yet
+  if (!recipe) {
+    return (
+      <div className="recipe-details-container">
+        <div className="error-message">Recipe not found or failed to load</div>
+        <button 
+          onClick={handleBack}
+          className="back-button"
+        >
+          ← Back to Recipes
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="recipe-details-container">
       <div className="button-group">
-        <button
-          className={`back-button ${isHovered ? 'hover' : ''}`}
+        <button 
           onClick={handleBack}
+          className="back-button"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          Back
+          ← Back to {isHovered ? 'Recipes' : ''}
         </button>
-        <button
+        <button 
           className={`save-recipe-button ${isSaved ? 'saved' : ''}`}
           onClick={handleSaveRecipe}
           disabled={isSaving || isSaved}
@@ -96,16 +192,79 @@ const RecipeDetails = () => {
         </button>
       </div>
       
-      {error && <div className="error-message">{error}</div>}
+      {saveError && <div className="error-message">{saveError}</div>}
       
-      <h2 className="recipe-details-title">Recipe Details</h2>
+      <h2 className="recipe-details-title">{title}</h2>
+      
+      {imageUrl && (
+        <div className="recipe-image">
+          <img 
+            src={imageUrl} 
+            alt={title} 
+            className="recipe-image"
+            onError={(e) => {
+              // Hide the image if it fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
+      
       <div className="recipe-content">
-        {recipe.split('\n').map((line, idx) => (
-          <span key={idx}>
-            {line}
-            <br />
-          </span>
-        ))}
+        <div className="recipe-section">
+          <h3>Description</h3>
+          <p className="recipe-description">{description}</p>
+        </div>
+        
+        <div className="recipe-section">
+          <h3>Ingredients</h3>
+          <ul className="ingredients-list">
+            {ingredients.length > 0 ? (
+              ingredients.map((ingredient, idx) => (
+                <li key={idx} className="ingredient-item">
+                  {ingredient}
+                </li>
+              ))
+            ) : (
+              <li>No ingredients listed</li>
+            )}
+          </ul>
+        </div>
+        
+        <div className="recipe-section">
+          <h3>Instructions</h3>
+          <ol className="instructions-list">
+            {instructions.length > 0 ? (
+              instructions.map((instruction, idx) => (
+                <li key={idx} className="instruction-step">
+                  {instruction}
+                </li>
+              ))
+            ) : (
+              <li>No instructions provided</li>
+            )}
+          </ol>
+        </div>
+        
+        <div className="recipe-meta">
+          <div className="meta-item">
+            <span className="meta-label">Prep Time:</span>
+            <span className="meta-value">{prepTime} minutes</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Cook Time:</span>
+            <span className="meta-value">{cookTime} minutes</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Servings:</span>
+            <span className="meta-value">{servings}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Difficulty:</span>
+            <span className="meta-value">{difficulty}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -46,6 +46,10 @@ export default function MyRecipes() {
     });
   };
 
+  const handleViewRecipe = (recipeId: string) => {
+    router.push(`/recipe-details/${recipeId}`);
+  };
+
   return (
     <div className="my-recipes-container">
       <div className="header">
@@ -58,13 +62,18 @@ export default function MyRecipes() {
       {loading ? (
         <div className="loading">Loading your recipes...</div>
       ) : error ? (
-        <div className="error">{error}</div>
+        <div className="error">
+          {error}
+          <button onClick={() => window.location.reload()} className="find-recipes-button">
+            Try Again
+          </button>
+        </div>
       ) : recipes.length === 0 ? (
         <div className="no-recipes">
           <p>You haven't saved any recipes yet.</p>
-          <button onClick={() => router.push('/')} className="find-recipes-button">
-            Find Recipes to Save
-          </button>
+          <Link href="/" className="find-recipes-button">
+            Find Recipes
+          </Link>
         </div>
       ) : (
         <div className="recipes-grid">
@@ -75,7 +84,7 @@ export default function MyRecipes() {
               <div className="recipe-footer">
                 <span className="date">Saved on {formatDate(recipe.createdAt)}</span>
                 <button 
-                  onClick={() => router.push(`/recipe-details/${recipe.id}`)}
+                  onClick={() => handleViewRecipe(recipe.id)}
                   className="view-recipe-button"
                 >
                   View Recipe

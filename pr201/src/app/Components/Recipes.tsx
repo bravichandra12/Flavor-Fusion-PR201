@@ -48,7 +48,7 @@ const Recipes = () => {
 
   const viewRecipe = (idx: number) => {
     localStorage.setItem('selectedRecipe', recipes[idx]);
-    router.push('/recipe-details');
+    router.push('/details');
   };
 
   const saveRecipe = async (recipe: string) => {
