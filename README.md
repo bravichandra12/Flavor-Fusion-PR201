@@ -27,12 +27,6 @@ Flavor Fusion is an innovative AI-powered recipe generation platform that helps 
 - **Secure Authentication**: Google OAuth integration via NextAuth.js
 - **User Profiles**: Personalized cooking preferences and dietary restrictions
 - **Recipe Cookbook**: Save and organize your favorite generated recipes
-- **Password Recovery**: Secure forgot password functionality
-
-### 💳 Premium Features
-- **Payment Integration**: Subscription-based premium features
-- **Advanced Recipe Options**: Enhanced AI capabilities for premium users
-- **Priority Support**: Faster recipe generation for subscribers
 
 ## 🛠️ Tech Stack
 
@@ -231,19 +225,6 @@ npx prisma db pull          # Pull schema from database
 - Test your changes thoroughly
 - Ensure API keys are never hardcoded
 
-## 📝 License
-
-This project is licensed under the ISC License.
-
-## 🆘 Support
-
-If you encounter any issues or have questions:
-
-1. Check the FAQ section in the app
-2. Review the troubleshooting guide below
-3. Open an issue on GitHub
-4. Contact the development team
-
 ### Common Issues
 
 **Recipe generation fails**:
@@ -270,7 +251,5 @@ If you encounter any issues or have questions:
 - **NextAuth.js** for secure authentication
 
 ---
-
-**Made with ❤️ by the Flavor Fusion Team**
 
 *Bringing AI-powered cooking to kitchens worldwide* 🌍👨‍🍳👩‍🍳
